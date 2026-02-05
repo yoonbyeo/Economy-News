@@ -1,0 +1,71 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    function isOwnerCreate() {
+      return isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    match /news/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /symbols/{docId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /feeds/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /posts/{docId} {
+      allow read: if true;
+      allow create: if isOwnerCreate();
+      allow update, delete: if isOwner();
+    }
+
+    match /comments/{docId} {
+      allow read: if true;
+      allow create: if isOwnerCreate();
+      allow update, delete: if isOwner();
+    }
+
+    match /likes/{docId} {
+      allow read: if true;
+      allow create, delete: if isOwnerCreate();
+      allow update: if false;
+    }
+
+    match /bookmarks/{docId} {
+      allow read: if isOwner();
+      allow create, delete: if isOwnerCreate();
+      allow update: if false;
+    }
+
+    match /asks/{docId} {
+      allow read: if isOwner();
+      allow create: if isOwnerCreate();
+      allow update, delete: if isOwner();
+    }
+
+    match /users/{docId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn() && request.auth.uid == docId;
+    }
+  }
+}

@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --background: #0b0f16;
+  --foreground: #e6edf6;
+  --surface: #111826;
+  --surface-strong: #151f32;
+  --muted: #8ea0bf;
+  --accent: #41d1ff;
+  --accent-strong: #24b0ff;
+  --danger: #ff6b6b;
+  --border: #1f2a3f;
+  --card: #0f1726;
+  --chip: #18233a;
+  --glow: 0 0 0 1px rgba(65, 209, 255, 0.2), 0 12px 40px rgba(36, 176, 255, 0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(65, 209, 255, 0.15), transparent),
+    radial-gradient(900px 500px at 110% 10%, rgba(36, 176, 255, 0.18), transparent),
+    var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(65, 209, 255, 0.25);
+  color: #ffffff;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  color: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.skeleton {
+  background: linear-gradient(110deg, #182338 8%, #223049 18%, #182338 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
 }

@@ -1,65 +1,69 @@
-import Image from "next/image";
+import SectionHeader from "@/components/SectionHeader";
+import NewsCarousel from "@/components/NewsCarousel";
+import { getNewsByRegion } from "@/lib/news";
 
-export default function Home() {
+export default async function Home() {
+  const [krNews, globalNews] = await Promise.all([
+    getNewsByRegion("KR", 10),
+    getNewsByRegion("GLOBAL", 10),
+  ]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto w-full max-w-6xl px-5 py-10">
+      <section className="grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent)]">
+            경제 인사이트
           </p>
+          <h1 className="mt-3 font-display text-4xl font-semibold leading-tight text-white md:text-5xl">
+            한국과 글로벌 경제 흐름을
+            <br />
+            분리해서 빠르게 파악하세요.
+          </h1>
+          <p className="mt-4 text-sm text-[var(--muted)]">
+            카드형 뉴스 요약, 종목 커뮤니티, 투자 고민 정리를 한 곳에서.
+            원문 전문 저장 없이 안전한 방식으로 업데이트됩니다.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 text-xs text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 px-3 py-2">
+              한국/세계 분리 피드
+            </span>
+            <span className="rounded-full border border-white/10 px-3 py-2">
+              종목 커뮤니티 토론
+            </span>
+            <span className="rounded-full border border-white/10 px-3 py-2">
+              투자 고민 정리 도구
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="rounded-3xl border border-white/10 bg-[var(--surface)] p-6">
+          <p className="text-sm font-semibold">오늘의 키포인트</p>
+          <ul className="mt-4 space-y-3 text-sm text-[var(--muted)]">
+            <li>- 한국/글로벌 뉴스 흐름을 지역별로 정렬</li>
+            <li>- 종목별 토론과 뉴스 연결</li>
+            <li>- 투자 판단 대신 사고 정리 지원</li>
+          </ul>
+          <div className="mt-6 rounded-2xl border border-white/10 bg-[#0b1220] p-4 text-xs text-[var(--muted)]">
+            로그인 없이 열람 가능 · 작성/반응은 로그인 필요
+          </div>
         </div>
-      </main>
+      </section>
+
+      <section className="mt-12 space-y-4">
+        <SectionHeader
+          title="한국 주요 뉴스"
+          description="국내 경제 흐름을 최신순으로 확인합니다."
+        />
+        <NewsCarousel items={krNews} />
+      </section>
+
+      <section className="mt-12 space-y-4">
+        <SectionHeader
+          title="세계 주요 뉴스"
+          description="미국 중심 글로벌 경제 뉴스를 정리합니다."
+        />
+        <NewsCarousel items={globalNews} />
+      </section>
     </div>
   );
 }
